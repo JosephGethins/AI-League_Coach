@@ -1,1 +1,0 @@
-[2025-08-25 22:31:08] Inputs: {'gold': 2000, 'health': 80, 'mana': 70, 'enemy_nearby': True, 'dragon_alive': True} | Strategy: Try to Team fight

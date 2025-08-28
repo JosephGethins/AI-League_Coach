@@ -21,7 +21,6 @@ def recommend_strategy(gold, health, mana,
         "Invade Jungle": 0
     }
 
-    # --- Core survival rules ---
     if health < 25:
         scores["Retreat/Base"] += 12 + random.randint(-2,2)
     elif health < 50 and enemy_nearby:
@@ -30,45 +29,38 @@ def recommend_strategy(gold, health, mana,
     if mana < 20:
         scores["Retreat/Base"] += 5 + random.randint(-1,1)
 
-    # --- Economy rules ---
     if gold > 3000:
         scores["Buy Items"] += 12 + random.randint(-2,2)
     elif gold > 2000 and not enemy_nearby:
         scores["Buy Items"] += 6 + random.randint(-1,1)
 
-    # --- Fight rules ---
     if enemy_nearby and health > 60 and mana > 40:
         fight_score = 12 if allies_alive > enemies_dead else 6
         scores["Fight"] += fight_score + random.randint(-2,2)
         if ultimate_ready:
-            scores["Fight"] += 3  # bonus for ultimate availability
+            scores["Fight"] += 3 
 
-    # --- Objective rules ---
     if dragon_alive and (enemy_TeamWipe or enemies_dead >= 3) and health > 60:
         scores["Take Dragon"] += 15 + random.randint(-3,3)
 
     if baron_alive and (enemy_TeamWipe or enemies_dead >= 4) and health > 70:
         scores["Take Baron"] += 18 + random.randint(-3,3)
 
-    # --- Map pressure rules ---
     if turrets_down >= 3 and game_time > 20 and enemies_dead >= 2:
         scores["Push Lanes"] += 10 + random.randint(-2,2)
 
-    # --- Farm rules ---
     if gold < 1500 and health > 60 and not enemy_nearby:
         scores["Farm"] += 8 + random.randint(-2,2)
 
     if game_time < 15:
         scores["Farm"] += 5 + random.randint(-1,1)
 
-    # --- Team gold lead logic ---
     if gold_lead > 3000:
         scores["Fight"] += 5 + random.randint(-1,1)
     elif gold_lead < -3000:
         scores["Farm"] += 6 + random.randint(-1,1)
         scores["Retreat/Base"] += 3 + random.randint(-1,1)
-
-    # --- Jungle / tower pressure rules ---
+      
     if jungle_camps_up >= 2 and not enemy_nearby:
         scores["Invade Jungle"] += 8 + random.randint(-2,2)
     if tower_pressure > 0 and health > 50:
@@ -92,7 +84,7 @@ def log_strategy(inputs, strategy, filename="strategy_log.csv"):
         df.to_csv(filename, mode="w", header=True, index=False)
 
 
-def generate_random_scenarios(n=100000, filename="strategy_log.csv"):
+def generate_random_scenarios(n, filename="strategy_log.csv"):
     for _ in range(n):
         inputs = {
             "gold": random.randint(0, 6000),
@@ -115,7 +107,7 @@ def generate_random_scenarios(n=100000, filename="strategy_log.csv"):
         strategy = recommend_strategy(**inputs)
         log_strategy(inputs, strategy, filename)
 
-    print(f"✅ Generated {n} enhanced random scenarios into {filename}")
+    print(f" generated {n} enhanced random scenarios into {filename}")
     
 def manual_input_mode():
     print("********** Manual Input Mode **********")

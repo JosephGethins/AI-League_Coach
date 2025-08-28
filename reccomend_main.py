@@ -23,7 +23,7 @@ def recommend_strategy(gold, health, mana,
 
     if health < 25:
         scores["Retreat/Base"] += 12 + random.randint(-2,2)
-    elif health < 50 and enemy_nearby:
+    elif health < 30 and enemy_nearby:
         scores["Retreat/Base"] += 8 + random.randint(-2,2)
 
     if mana < 20:
@@ -35,8 +35,11 @@ def recommend_strategy(gold, health, mana,
         scores["Buy Items"] += 6 + random.randint(-1,1)
 
     if enemy_nearby and health > 60 and mana > 40:
-        fight_score = 12 if allies_alive > enemies_dead else 6
-        scores["Fight"] += fight_score + random.randint(-2,2)
+        if allies_alive > enemies_dead:
+            fight_score = 12
+        else:
+            fight_score = 6
+            scores["Fight"] += fight_score + random.randint(-2,2)
         if ultimate_ready:
             scores["Fight"] += 3 
 

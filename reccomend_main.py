@@ -60,6 +60,7 @@ def recommend_strategy(gold, health, mana,
 
     if gold_lead > 3000:
         scores["Fight"] += 5 + random.randint(-1,1)
+        
     elif gold_lead < -3000:
         scores["Farm"] += 6 + random.randint(-1,1)
         scores["Retreat/Base"] += 3 + random.randint(-1,1)

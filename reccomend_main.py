@@ -20,7 +20,8 @@ def recommend_strategy(gold, health, mana,
         "Push Lanes": 0,
         "Invade Jungle": 0
     }
-
+    
+    # Rules for training
     if health < 25:
         scores["Retreat/Base"] += 12 + random.randint(-2,2)
     elif health < 30 and enemy_nearby:
@@ -73,7 +74,7 @@ def recommend_strategy(gold, health, mana,
     best_strategy = max(scores, key=scores.get)
     return best_strategy
 
-
+# w means write and a means append, this way we will add to the csv instead of overwriting it but may change later as current csv only has 100 rows and I might overwrite that
 def log_strategy(inputs, strategy, filename="strategy_log.csv"):
     row = {
         **inputs,
@@ -87,7 +88,7 @@ def log_strategy(inputs, strategy, filename="strategy_log.csv"):
     else:
         df.to_csv(filename, mode="w", header=True, index=False)
 
-
+# I couldnt find a dataset that isnt just endgame stats, when I needed actual current stats during the game to set the rule, so Im just doing random for now
 def generate_random_scenarios(n, filename="strategy_log.csv"):
     for _ in range(n):
         inputs = {
@@ -151,7 +152,8 @@ def manual_input_mode():
     }
 
     strategy = recommend_strategy(**inputs)
-    print("\nRecommended Strategy:", strategy)
+    print()
+    print("Recommended Strategy:", strategy)
     log_strategy(inputs, strategy)
 
 def main():

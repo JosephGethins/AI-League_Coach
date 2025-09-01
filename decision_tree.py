@@ -30,3 +30,22 @@ decision_tree = DecisionTreeClassifier(
     class_weight = "balanced",
     random_state = 21
 )
+
+decision_tree.fit(X_train, y_train)
+
+
+def evaluate_model(model, features_set, labels_set, set_name):
+    predictions = model.predict(features_set)
+
+    # count how many were correct
+    correct = sum(predictions == labels_set)
+    total = len(labels_set)
+    accuracy = correct / total
+
+    print()
+    print(f"Correct predictions: {correct}/{total}")
+    print(f"Accuracy: {accuracy:.2f}")
+    print()
+
+evaluate_model(decision_tree, X_validation, y_validation, "Validation")
+evaluate_model(decision_tree, X_test, y_test, "Test")

@@ -44,8 +44,8 @@ def evaluate_model(model, features_set, labels_set):
     print(f"Correct predictions: {correct}/{total}")
     print("Accuracy:", round(accuracy, 2))
     print()
-    print("\nClassification Report:")
-    print(classification_report(labels_set, predictions))
+    print("Classification Report:")
+    print( classification_report(labels_set, predictions))
     print()
 
 evaluate_model(decision_tree, X_validation, y_validation, "Validation")
@@ -54,12 +54,12 @@ evaluate_model(decision_tree, X_test, y_test, "Test")
 # Modified a stack overflow snippet of code, this is something called "Feature Importance"
 # It gives numerical "weights" to show how important each feature was and then displays them as a table
 # I was told to add this buy a peer more familiar with AI because it helps you see if for some reason an important feature is having no impact
-
-print("\nFeature Importance:")
+print()
+print("Feature Importance:")
 for feature_name, importance in sorted(
     zip(data.columns, decision_tree.feature_importances_), key=lambda x: -x[1]
 ):
-    print(f"{feature_name:20s} {importance:.3f}")
+    print(feature_name, round(importance, 3))
 
 
 joblib.dump(decision_tree, "League_strategy_coach.pkl")

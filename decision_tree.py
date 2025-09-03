@@ -2,7 +2,7 @@ import pandas as panda
 import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score, f1_score, classification_report
+from sklearn.metrics import classification_report
 
 dataset = panda.read_csv("strategy_log.csv")
 
@@ -34,18 +34,32 @@ decision_tree = DecisionTreeClassifier(
 decision_tree.fit(X_train, y_train)
 
 
-def evaluate_model(model, features_set, labels_set, set_name):
+def evaluate_model(model, features_set, labels_set):
     predictions = model.predict(features_set)
-
-    # count how many were correct
     correct = sum(predictions == labels_set)
     total = len(labels_set)
     accuracy = correct / total
 
     print()
     print(f"Correct predictions: {correct}/{total}")
-    print(f"Accuracy: {accuracy:.2f}")
+    print("Accuracy:", round(accuracy, 2))
+    print()
+    print("\nClassification Report:")
+    print(classification_report(labels_set, predictions))
     print()
 
 evaluate_model(decision_tree, X_validation, y_validation, "Validation")
 evaluate_model(decision_tree, X_test, y_test, "Test")
+
+# Modified a stack overflow snippet of code, this is something called "Feature Importance"
+# It gives numerical "weights" to show how important each feature was and then displays them as a table
+# I was told to add this buy a peer more familiar with AI because it helps you see if for some reason an important feature is having no impact
+
+print("\nFeature Importance:")
+for feature_name, importance in sorted(
+    zip(data.columns, decision_tree.feature_importances_), key=lambda x: -x[1]
+):
+    print(f"{feature_name:20s} {importance:.3f}")
+
+
+joblib.dump(decision_tree, "League_strategy_coach.pkl")

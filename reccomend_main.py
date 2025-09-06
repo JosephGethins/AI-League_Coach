@@ -83,10 +83,7 @@ def log_strategy(inputs, strategy, filename="strategy_log.csv"):
     }
     df = panda.DataFrame([row])
 
-    if os.path.exists(filename):
-        df.to_csv(filename, mode="a", header=False, index=False)
-    else:
-        df.to_csv(filename, mode="w", header=True, index=False)
+    df.to_csv(filename, mode="w", header=True, index=False)
 
 # I couldnt find a dataset that isnt just endgame stats, when I needed actual current stats during the game to set the rule, so Im just doing random for now
 def generate_random_scenarios(n, filename="strategy_log.csv"):
@@ -113,7 +110,7 @@ def generate_random_scenarios(n, filename="strategy_log.csv"):
         strategy = recommend_strategy(**inputs)
         log_strategy(inputs, strategy, filename)
 
-    print(f" generated {n} enhanced random scenarios into {filename}")
+    print(f"Generated {n} enhanced random scenarios into {filename}")
     
 def manual_input_mode():
     print("********** Manual Input Mode **********")

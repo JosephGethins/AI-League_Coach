@@ -1,21 +1,38 @@
 # predict_realtime.py
 import pandas as panda
 import joblib
+import os
+import datetime
 
 from reccomend_main import recommend_strategy 
 
 # --- Load the trained model ---
-decision_tree_model = joblib.load("strategy_log.pkl")
+decision_tree_model = joblib.load("League_strategy_coach.pkl")
 
-def predict_strategy(game_scenario):
-    # Convert true or false to 0 and 1 same as before and load the dictionary
-    features_df = panda.DataFrame([game_scenario])
-    features_df = features_df.astype(int)
+def AI_v_rules(game_scenario, filename="ai_vs_rules_log.csv"):
+    # AI 
+    features_df = panda.DataFrame([game_scenario]).astype(int)
+    ai_strategy = decision_tree_model.predict(features_df)[0]
 
-    strat = decision_tree_model.predict(features_df)
-    
-    return strat
+    # Rules 
+    rules_strategy = recommend_strategy(**game_scenario)
 
+    # Create log row
+    log_row = {
+        **game_scenario,
+        "rules_strategy": rules_strategy,
+        "ai_strategy": ai_strategy,
+        "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+
+    #  CSV creation
+    df = panda.DataFrame([log_row])
+    if panda.io.common.file_exists(filename):
+        df.to_csv(filename, mode="a", header=False, index=False)
+    else:
+        df.to_csv(filename, mode="w", header=True, index=False)
+
+    print("Logged scenario. Rules: {rules_strategy}, AI: {ai_strategy}")
 
 example = {
     "gold": 3200,
@@ -35,5 +52,4 @@ example = {
     "ultimate_ready": True
 }
 
-predicted_strategy = predict_strategy(example)
-print("Predicted strategy: ", predicted_strategy)
+AI_v_rules(example)

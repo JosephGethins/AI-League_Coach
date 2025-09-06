@@ -34,13 +34,14 @@ decision_tree = DecisionTreeClassifier(
 decision_tree.fit(X_train, y_train)
 
 
-def evaluate_model(model, features_set, labels_set):
+def evaluate_model(model, features_set, labels_set, set_name):
     predictions = model.predict(features_set)
     correct = sum(predictions == labels_set)
     total = len(labels_set)
     accuracy = correct / total
 
     print()
+    print(set_name)
     print(f"Correct predictions: {correct}/{total}")
     print("Accuracy:", round(accuracy, 2))
     print()

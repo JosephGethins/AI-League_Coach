@@ -1,0 +1,61 @@
+
+Validation
+Correct predictions: 1111/1500
+Accuracy: 0.74
+
+Classification Report:
+               precision    recall  f1-score   support
+
+    Buy Items       0.89      0.71      0.79       452
+         Farm       0.73      0.62      0.67       185
+        Fight       0.34      0.79      0.48        57
+Invade Jungle       0.60      0.93      0.73        67
+   Push Lanes       0.66      0.41      0.50       142
+ Retreat/Base       0.82      0.88      0.85       324
+   Take Baron       0.74      0.88      0.80       133
+  Take Dragon       0.71      0.77      0.74       140
+
+     accuracy                           0.74      1500
+    macro avg       0.69      0.75      0.70      1500
+ weighted avg       0.77      0.74      0.74      1500
+
+
+
+Test
+Correct predictions: 1101/1500
+Accuracy: 0.73
+
+Classification Report:
+               precision    recall  f1-score   support
+
+    Buy Items       0.89      0.75      0.81       452
+         Farm       0.75      0.57      0.65       185
+        Fight       0.36      0.74      0.48        57
+Invade Jungle       0.47      0.94      0.62        67
+   Push Lanes       0.62      0.35      0.44       142
+ Retreat/Base       0.84      0.89      0.86       323
+   Take Baron       0.71      0.90      0.79       133
+  Take Dragon       0.70      0.70      0.70       141
+
+     accuracy                           0.73      1500
+    macro avg       0.67      0.73      0.67      1500
+ weighted avg       0.76      0.73      0.73      1500
+
+
+
+Feature Importance:
+health 0.323
+gold 0.103
+enemies_dead 0.093
+game_time 0.083
+gold_lead 0.074
+baron_alive 0.074
+dragon_alive 0.07
+enemy_nearby 0.068
+jungle_camps_up 0.039
+enemy_TeamWipe 0.026
+mana 0.019
+turrets_down 0.018
+tower_pressure 0.004
+allies_alive 0.004
+ultimate_ready 0.0

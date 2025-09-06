@@ -1,5 +1,5 @@
 import datetime
-import pandas as pd
+import pandas as panda
 import os
 import random
 
@@ -81,7 +81,7 @@ def log_strategy(inputs, strategy, filename="strategy_log.csv"):
         "strategy": strategy,
         "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
-    df = pd.DataFrame([row])
+    df = panda.DataFrame([row])
 
     if os.path.exists(filename):
         df.to_csv(filename, mode="a", header=False, index=False)
@@ -109,6 +109,7 @@ def generate_random_scenarios(n, filename="strategy_log.csv"):
             "ultimate_ready": random.choice([True, False])
         }
 
+        # the double asterisk takes a pair from the dictionary instead of having to type them all
         strategy = recommend_strategy(**inputs)
         log_strategy(inputs, strategy, filename)
 

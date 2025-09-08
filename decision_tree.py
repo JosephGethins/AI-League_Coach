@@ -52,9 +52,12 @@ def evaluate_model(model, features_set, labels_set, set_name):
 evaluate_model(decision_tree, X_validation, y_validation, "Validation")
 evaluate_model(decision_tree, X_test, y_test, "Test")
 
+'''
 # Modified a stack overflow snippet of code, this is something called "Feature Importance"
 # It gives numerical "weights" to show how important each feature was and then displays them as a table
 # I was told to add this buy a peer more familiar with AI because it helps you see if for some reason an important feature is having no impact
+'''
+
 print()
 print("Feature Importance:")
 for feature_name, importance in sorted(
@@ -64,3 +67,19 @@ for feature_name, importance in sorted(
 
 
 joblib.dump(decision_tree, "League_strategy_coach.pkl")
+
+
+# Here I will put an explanation of what each column in the output means 
+
+# Precision: This measure out of all the times the AI prediction was actually correct (In comparison to rules) 
+#  e.g, 0.89 means when the AI predicts "Buy Items", 89% of the time it’s correct.
+
+# Recall: Similar to Precision but kind of a reverse check, this checks out of all times a certain strategy was correct, the AI correctly predicts it a certain percentage of the time
+#  e.g, Out of all times "Buy Items" was correct, the AI predicted it successfully 71 percent of the time
+
+# F1 Score is just combining Precsion and Recall into an overall score which is like a measure of the reliability, higher the score, more reliable the AI is
+
+# Support is just how many times the strategy was present in the dataset 
+
+# Feature Importance is just an output on how important the variables were and how much the model relied on them to make decisions, 
+#  this way we can cut out something if it incredibly low importance or maybe the model is relying on one variable too much etc

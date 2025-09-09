@@ -1,0 +1,3 @@
+gold,health,mana,enemy_nearby,enemy_TeamWipe,dragon_alive,baron_alive,game_time,gold_lead,turrets_down,allies_alive,enemies_dead,jungle_camps_up,tower_pressure,ultimate_ready,rules_strategy,ai_strategy,Was_Ai_Correct?,timestamp
+3200,80,60,True,False,True,False,22,1500,3,4,2,2,3,True,Fight,Buy Items,False,2025-09-09 21:14:05
+1800,45,30,True,False,False,False,10,-2000,1,3,1,3,2,False,Farm,Farm,True,2025-09-09 21:14:52

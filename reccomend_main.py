@@ -23,6 +23,77 @@ def recommend_strategy(gold, health, mana,
     
     # Rules for training
     if health < 25:
+        scores["Retreat/Base"] += 12 
+    elif health < 30 and enemy_nearby:
+        scores["Retreat/Base"] += 8 
+
+    if mana < 20:
+        scores["Retreat/Base"] += 5 
+
+    if gold > 3000:
+        scores["Buy Items"] += 12 
+    elif gold > 2000 and not enemy_nearby:
+        scores["Buy Items"] += 6 
+
+    if enemy_nearby and health > 60 and mana > 40:
+        if allies_alive > enemies_dead:
+            fight_score = 12
+        else:
+            fight_score = 6
+        scores["Fight"] += fight_score 
+        if ultimate_ready:
+            scores["Fight"] += 3 
+
+    if dragon_alive and (enemy_TeamWipe or enemies_dead >= 3) and health > 60:
+        scores["Take Dragon"] += 15 
+
+    if baron_alive and (enemy_TeamWipe or enemies_dead >= 4) and health > 70:
+        scores["Take Baron"] += 18 
+
+    if turrets_down >= 3 and game_time > 20 and enemies_dead >= 2:
+        scores["Push Lanes"] += 10 
+
+    if gold < 1500 and health > 60 and not enemy_nearby:
+        scores["Farm"] += 8 
+
+    if game_time < 15:
+        scores["Farm"] += 5 
+
+    if gold_lead > 3000:
+        scores["Fight"] += 5 
+        
+    elif gold_lead < -3000:
+        scores["Farm"] += 6 
+        scores["Retreat/Base"] += 3 
+      
+    if jungle_camps_up >= 2 and not enemy_nearby:
+        scores["Invade Jungle"] += 8 
+    if tower_pressure > 0 and health > 50:
+        scores["Push Lanes"] += tower_pressure 
+
+    best_strategy = max(scores, key=scores.get)
+    return best_strategy
+
+def recommend_strategy_with_Randomness(gold, health, mana, 
+                       enemy_nearby, enemy_TeamWipe, 
+                       dragon_alive, baron_alive,
+                       game_time, gold_lead, turrets_down, 
+                       allies_alive, enemies_dead,
+                       jungle_camps_up, tower_pressure, ultimate_ready):
+
+    scores = {
+        "Farm": 0,
+        "Fight": 0,
+        "Buy Items": 0,
+        "Take Dragon": 0,
+        "Take Baron": 0,
+        "Retreat/Base": 0,
+        "Push Lanes": 0,
+        "Invade Jungle": 0
+    }
+    
+    # Rules for training
+    if health < 25:
         scores["Retreat/Base"] += 12 + random.randint(-2,2)
     elif health < 30 and enemy_nearby:
         scores["Retreat/Base"] += 8 + random.randint(-2,2)
@@ -107,7 +178,7 @@ def generate_random_scenarios(n, filename="Data_logs_and_csv/strategy_log.csv"):
         }
 
         # the double asterisk takes a pair from the dictionary instead of having to type them all
-        strategy = recommend_strategy(**inputs)
+        strategy = recommend_strategy_with_Randomness(**inputs)
         log_strategy(inputs, strategy, filename)
 
     print(f"Generated {n} enhanced random scenarios into {filename}")

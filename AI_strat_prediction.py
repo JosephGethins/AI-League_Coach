@@ -16,12 +16,15 @@ def AI_v_rules(game_scenario, filename="Data_logs_and_csv/ai_vs_rules_log.csv"):
 
     # Rules 
     rules_strategy = recommend_strategy(**game_scenario)
+    
+    validation_check = rules_strategy == ai_strategy
 
     # Create log row
     log_row = {
         **game_scenario,
         "rules_strategy": rules_strategy,
         "ai_strategy": ai_strategy,
+        "Was_Ai_Correct?": validation_check,
         "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
 
@@ -35,21 +38,21 @@ def AI_v_rules(game_scenario, filename="Data_logs_and_csv/ai_vs_rules_log.csv"):
     print(f"Logged scenario. Rules: {rules_strategy}, AI: {ai_strategy}")
 
 example = {
-    "gold": 3200,
-    "health": 80,
-    "mana": 60,
+    "gold": 1800,
+    "health": 45,
+    "mana": 30,
     "enemy_nearby": True,
     "enemy_TeamWipe": False,
-    "dragon_alive": True,
+    "dragon_alive": False,
     "baron_alive": False,
-    "game_time": 22,
-    "gold_lead": 1500,
-    "turrets_down": 3,
-    "allies_alive": 4,
-    "enemies_dead": 2,
-    "jungle_camps_up": 2,
-    "tower_pressure": 3,
-    "ultimate_ready": True
+    "game_time": 10,
+    "gold_lead": -2000,
+    "turrets_down": 1,
+    "allies_alive": 3,
+    "enemies_dead": 1,
+    "jungle_camps_up": 3,
+    "tower_pressure": 2,
+    "ultimate_ready": False
 }
 
 AI_v_rules(example)

@@ -9,7 +9,7 @@ from reccomend_main import recommend_strategy
 # --- Load the trained model ---
 decision_tree_model = joblib.load("League_strategy_coach.pkl")
 
-def AI_v_rules(game_scenario, filename="ai_vs_rules_log.csv"):
+def AI_v_rules(game_scenario, filename="Data_logs_and_csv/ai_vs_rules_log.csv"):
     # AI 
     features_df = panda.DataFrame([game_scenario]).astype(int)
     ai_strategy = decision_tree_model.predict(features_df)[0]
@@ -27,12 +27,12 @@ def AI_v_rules(game_scenario, filename="ai_vs_rules_log.csv"):
 
     #  CSV creation
     df = panda.DataFrame([log_row])
-    if panda.io.common.file_exists(filename):
+    if os.path.exists(filename):
         df.to_csv(filename, mode="a", header=False, index=False)
     else:
         df.to_csv(filename, mode="w", header=True, index=False)
 
-    print("Logged scenario. Rules: {rules_strategy}, AI: {ai_strategy}")
+    print(f"Logged scenario. Rules: {rules_strategy}, AI: {ai_strategy}")
 
 example = {
     "gold": 3200,

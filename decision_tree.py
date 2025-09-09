@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report
 
-dataset = panda.read_csv("strategy_log.csv")
+dataset = panda.read_csv("Data_logs_and_csv/strategy_log.csv")
 
 # Similar to SQL syntax it seems
 data = dataset.drop(columns=["strategy", "timestamp"])

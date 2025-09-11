@@ -4,11 +4,13 @@ import os
 import random
 
 def recommend_strategy(gold, health, mana, 
-                       enemy_nearby, enemy_TeamWipe, 
-                       dragon_alive, baron_alive,
+                       enemy_nearby, enemy_TeamWipe, vision_score, enemy_jngl_alive,
+                       dragon_alive, baron_alive, grubs_alive, herald_alive, atakhan_alive,
                        game_time, gold_lead, turrets_down, 
-                       allies_alive, enemies_dead,
-                       jungle_camps_up, tower_pressure, ultimate_ready):
+                       allies_alive, enemies_dead, player_is_support,
+                       jungle_camps_up, lane_pressure, 
+                       ultimate_ready, enemy_item_diff,
+                       num_of_teammates_alive, num_of_enemies_alive):
 
     scores = {
         "Farm": 0,
@@ -26,13 +28,16 @@ def recommend_strategy(gold, health, mana,
         scores["Retreat/Base"] += 12 
     elif health < 30 and enemy_nearby:
         scores["Retreat/Base"] += 8 
+        
+    if (vision_score <= game_time * 2 and player_is_support and game_time > 20) or (vision_score <= game_time * 1 and player_is_support and game_time <= 20) or (vision_score <= game_time * 1 and not player_is_support):
+        scores["Ward and Increase Vision Score"] += 4
 
     if mana < 20:
         scores["Retreat/Base"] += 5 
 
     if gold > 3000:
         scores["Buy Items"] += 12 
-    elif gold > 2000 and not enemy_nearby:
+    elif gold > 1500 and not enemy_nearby:
         scores["Buy Items"] += 6 
 
     if enemy_nearby and health > 60 and mana > 40:
@@ -43,13 +48,26 @@ def recommend_strategy(gold, health, mana,
         scores["Fight"] += fight_score 
         if ultimate_ready:
             scores["Fight"] += 3 
+            
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    if dragon_alive and (enemy_TeamWipe or enemies_dead >= 3) and health > 60:
+    if dragon_alive and game_time < 20 and (enemy_TeamWipe or (enemies_dead >= 2 and not enemy_jngl_alive) or enemies_dead >= 4) and health > 60:
         scores["Take Dragon"] += 15 
 
-    if baron_alive and (enemy_TeamWipe or enemies_dead >= 4) and health > 70:
+    if baron_alive and game_time >= 20 and (enemy_TeamWipe or (enemies_dead >= 3 and not enemy_jngl_alive) or enemies_dead >= 4) and health > 50:
         scores["Take Baron"] += 18 
-
+        
+    if herald_alive and game_time >= 15 and game_time < 24 and (enemy_TeamWipe or (enemies_dead >= 3 and not enemy_jngl_alive) or enemies_dead >= 4) and health > 50:
+        scores["Take Herald"] += 18 
+        
+    if baron_alive and game_time >= 20 and (enemy_TeamWipe or (enemies_dead >= 3 and not enemy_jngl_alive) or enemies_dead >= 4) and health > 50:
+        scores["Take Baron"] += 18 
+        
+    if baron_alive and game_time >= 20 and (enemy_TeamWipe or (enemies_dead >= 3 and not enemy_jngl_alive) or enemies_dead >= 4) and health > 50:
+        scores["Take Baron"] += 18 
+        
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        
     if turrets_down >= 3 and game_time > 20 and enemies_dead >= 2:
         scores["Push Lanes"] += 10 
 
@@ -68,8 +86,8 @@ def recommend_strategy(gold, health, mana,
       
     if jungle_camps_up >= 2 and not enemy_nearby:
         scores["Invade Jungle"] += 8 
-    if tower_pressure > 0 and health > 50:
-        scores["Push Lanes"] += tower_pressure 
+    if lane_pressure > 0 and health > 50:
+        scores["Push Lanes"] += lane_pressure 
 
     best_strategy = max(scores, key=scores.get)
     return best_strategy
@@ -79,7 +97,7 @@ def recommend_strategy_with_Randomness(gold, health, mana,
                        dragon_alive, baron_alive,
                        game_time, gold_lead, turrets_down, 
                        allies_alive, enemies_dead,
-                       jungle_camps_up, tower_pressure, ultimate_ready):
+                       jungle_camps_up, lane_pressure, ultimate_ready):
 
     scores = {
         "Farm": 0,
@@ -139,8 +157,8 @@ def recommend_strategy_with_Randomness(gold, health, mana,
       
     if jungle_camps_up >= 2 and not enemy_nearby:
         scores["Invade Jungle"] += 8 + random.randint(-2,2)
-    if tower_pressure > 0 and health > 50:
-        scores["Push Lanes"] += tower_pressure + random.randint(-1,1)
+    if lane_pressure > 0 and health > 50:
+        scores["Push Lanes"] += lane_pressure + random.randint(-1,1)
 
     best_strategy = max(scores, key=scores.get)
     return best_strategy
@@ -173,7 +191,7 @@ def generate_random_scenarios(n, filename="Data_logs_and_csv/strategy_log.csv"):
             "allies_alive": random.randint(0, 5),
             "enemies_dead": random.randint(0, 5),
             "jungle_camps_up": random.randint(0, 5),
-            "tower_pressure": random.randint(0, 5),
+            "lane_pressure": random.randint(0, 5),
             "ultimate_ready": random.choice([True, False])
         }
 
@@ -199,7 +217,7 @@ def manual_input_mode():
     allies_alive = int(input("How many allies are alive? "))
     enemies_dead = int(input("How many enemies are currently dead? "))
     jungle_camps_up = int(input("How many jungle camps are up? "))
-    tower_pressure = int(input("How much tower pressure? (0-5) "))
+    lane_pressure = int(input("How much lane pressure? (0-5) "))
     ultimate_ready = input("Is your ultimate ready? (yes/no): ").lower() == "yes"
 
     inputs = {
@@ -216,7 +234,7 @@ def manual_input_mode():
         "allies_alive": allies_alive,
         "enemies_dead": enemies_dead,
         "jungle_camps_up": jungle_camps_up,
-        "tower_pressure": tower_pressure,
+        "lane_pressure": lane_pressure,
         "ultimate_ready": ultimate_ready
     }
 
